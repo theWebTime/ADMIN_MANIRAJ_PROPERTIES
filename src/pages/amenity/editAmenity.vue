@@ -2,7 +2,7 @@
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
 
-    <VCard title="Update Data of this User">
+    <VCard title="Update Data of this Amenity">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -17,43 +17,21 @@
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppTextField
                 :rules="[globalRequire, nameMin].flat()"
-                v-model="insertData.title"
-                label="Title"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.amount"
-                type="number"
-                :rules="[globalRequire].flat()"
-                label="Amount"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.total_days"
-                :rules="[globalRequire].flat()"
-                type="number"
-                label="Total Days"
+                v-model="insertData.name"
+                label="Name"
               />
             </VCol>
             <VCol cols="12" md="6">
               <v-textarea
-                v-model="insertData.terms_and_condition"
-                :rules="[globalRequire].flat()"
-                label="Terms and Conditions"
-              /> </VCol
-            ><VCol cols="12" md="6">
-              <v-textarea
+                :rules="[globalRequire, nameMin].flat()"
                 v-model="insertData.description"
-                :rules="[globalRequire].flat()"
                 label="Description"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <VRadioGroup v-model="insertData.status" inline label="Status">
                 <VRadio label="Active" :value="1" density="compact" />
                 <VRadio label="In-Active" :value="0" density="compact" />
@@ -81,7 +59,7 @@
 
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-import http from "../../../http-common";
+import http from "../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -100,24 +78,14 @@ export default {
           return "Must be at least 3 characters.";
         },
       ],
-      email: [
-        (v) =>
-          !v ||
-          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-          "Email must be valid",
-      ],
-      image: "",
-      fetch_photo: "",
       insertData: {
         title: "",
-        amount: "",
-        total_days: "",
-        terms_and_condition: "",
         description: "",
         status: "",
+        amenity_update: this.$route.params.id,
       },
+      amenity_show: this.$route.params.id,
       loader: false,
-      paramsId: this.$route.params.id,
       errors: {},
       isAlertVisible: false,
     };
@@ -129,14 +97,11 @@ export default {
     async fetchData() {
       this.loader = true;
       await http
-        .get("/school-plan/show/" + this.paramsId)
+        .post("/amenity/show", { amenity_show: this.amenity_show })
         .then((res) => {
           if (res.data.success) {
             const resData = res.data.data;
-            this.insertData.title = resData.title;
-            this.insertData.amount = resData.amount;
-            this.insertData.total_days = resData.total_days;
-            this.insertData.terms_and_condition = resData.terms_and_condition;
+            this.insertData.name = resData.name;
             this.insertData.description = resData.description;
             this.insertData.status = resData.status;
           }
@@ -148,27 +113,29 @@ export default {
     },
     async updateData() {
       const checkValidation = await this.$refs.formSubmit.validate();
-      this.loader = true;
-      http
-        .post("school-plan/update/" + this.paramsId, this.insertData)
-        .then((res) => {
-          if (res.data.success) {
-            this.fetchData();
-            this.$toast.success(res.data.message);
-            this.$router.push({
-              path: "/schoolManagement/list/",
-            });
-            this.isAlertVisible = false;
-          } else {
-            this.$toast.error(res.data.message);
-            this.errors = res.data.data;
-            this.isAlertVisible = true;
-          }
-          this.loader = false;
-        })
-        .catch((e) => {
-          this.loader = false;
-        });
+      if (checkValidation.valid) {
+        this.loader = true;
+        http
+          .post("amenity/update", this.insertData)
+          .then((res) => {
+            if (res.data.success) {
+              this.fetchData();
+              this.$toast.success(res.data.message);
+              this.$router.push({
+                path: "/amenity/list/",
+              });
+              this.isAlertVisible = false;
+            } else {
+              this.$toast.error(res.data.message);
+              this.errors = res.data.data;
+              this.isAlertVisible = true;
+            }
+            this.loader = false;
+          })
+          .catch((e) => {
+            this.loader = false;
+          });
+      }
     },
   },
 };

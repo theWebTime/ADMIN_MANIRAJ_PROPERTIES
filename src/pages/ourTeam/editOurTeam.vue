@@ -1,9 +1,8 @@
 <template>
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-    <br />
-    <VDivider />
-    <VCard>
+
+    <VCard title="Update Data of this Our Team">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -17,8 +16,6 @@
       </VAlert>
       <VForm ref="formSubmit">
         <VCardText>
-          <h3>Update About Us</h3>
-          <br />
           <VRow>
             <VCol cols="12" md="6">
               <v-file-input
@@ -33,67 +30,22 @@
                 <VImg :src="fetch_photo" />
               </VAvatar>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
               <AppTextField
-                v-model="insertData.title"
                 :rules="[globalRequire].flat()"
-                label="Title"
+                v-model="insertData.name"
+                label="Name"
               />
             </VCol>
-            <VCol cols="12" md="6" class="editor-layout">
-              <QuillEditor
-                theme="snow"
-                v-model:content="insertData.description"
-                contentType="html"
-                label="Description"
-                :options="options"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
               <AppTextField
-                v-model="insertData.hand_of_experience"
                 :rules="[globalRequire].flat()"
-                label="Hand Of Experience"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.million_square_feet"
-                :rules="[globalRequire].flat()"
-                label="Million Square Feet"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.units"
-                :rules="[globalRequire].flat()"
-                label="Units"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.residential_property"
-                :rules="[globalRequire].flat()"
-                label="Residential Property"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.commercial_property"
-                :rules="[globalRequire].flat()"
-                label="Commercial Property"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.plots"
-                :rules="[globalRequire].flat()"
-                label="Plot"
+                v-model="insertData.role"
+                label="Role"
               />
             </VCol>
           </VRow>
         </VCardText>
-
         <VCardText class="d-flex justify-end flex-wrap gap-3">
           <VBtn @click="updateData"> Update </VBtn>
         </VCardText>
@@ -113,12 +65,11 @@
 
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import http from "../http-common";
+import ls from "localstorage-slim";
+import http from "../../http-common";
+
 export default {
   components: {
-    QuillEditor,
     GlobalBreadCrumbsVue,
   },
   data() {
@@ -129,57 +80,48 @@ export default {
           return "Required.";
         },
       ],
-      options: {
-        placeholder: "Enter text",
-      },
+      nameMin: [
+        (value) => {
+          if (value?.length >= 3) return true;
+          return "Must be at least 3 characters.";
+        },
+      ],
       image: "",
       fetch_photo: "",
       insertData: {
-        title: "",
-        description: "",
-        hand_of_experience: "",
-        million_square_feet: "",
-        units: "",
-        residential_property: "",
-        commercial_property: "",
-        plots: "",
+        name: "",
+        role: "",
+        our_team_update: this.$route.params.id,
       },
+      our_team_show: this.$route.params.id,
       loader: false,
       paramsId: this.$route.params.id,
       errors: {},
       isAlertVisible: false,
+      data_fetch_sub_services: "",
+      auth: ls.get("user-info", { decrypt: true }),
     };
   },
   created() {
     this.fetchData();
   },
   methods: {
-    fetchData() {
+    async fetchData() {
       this.loader = true;
-      http
-        .get("/user-side/show-about-us")
+      await http
+        .post("/our-team/show", { our_team_show: this.our_team_show })
         .then((res) => {
           if (res.data.success) {
-            this.insertData.title = res.data.data.title;
-            this.insertData.description = res.data.data.description;
-            this.insertData.hand_of_experience =
-              res.data.data.hand_of_experience;
-            this.insertData.million_square_feet =
-              res.data.data.million_square_feet;
-            this.insertData.units = res.data.data.units;
-            this.insertData.residential_property =
-              res.data.data.residential_property;
-            this.insertData.commercial_property =
-              res.data.data.commercial_property;
-            this.insertData.plots = res.data.data.plots;
-            this.fetch_photo = res.data.data.image;
+            const resData = res.data.data;
+            this.insertData.name = resData.name;
+            this.insertData.role = resData.role;
+            this.fetch_photo = resData.image;
           }
-          this.loader = false;
         })
         .catch((e) => {
-          this.loader = false;
           console.log(e);
         });
+      this.loader = false;
     },
     async updateData() {
       const checkValidation = await this.$refs.formSubmit.validate();
@@ -196,16 +138,18 @@ export default {
         }
         this.loader = true;
         http
-          .post("about-us/store", formData)
+          .post("our-team/update", formData)
           .then((res) => {
             if (res.data.success) {
               this.fetchData();
               this.$toast.success(res.data.message);
+              this.$router.push({
+                path: "/ourTeam/list/",
+              });
               this.isAlertVisible = false;
             } else {
               this.$toast.error(res.data.message);
               this.errors = res.data.data;
-              console.log(this.errors);
               this.isAlertVisible = true;
             }
             this.loader = false;
@@ -218,9 +162,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.editor-layout {
-  width: 100%;
-  height: 100%;
-}
-</style>

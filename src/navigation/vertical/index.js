@@ -14,201 +14,127 @@ var route = [
   },
 ];
 
-const manageSchoolManagement = {
-  title: "School Management",
+const manageSiteSetting = {
+  title: "Site Setting",
+  to: { name: "siteSetting" },
+  icon: { icon: "tabler-settings" },
+};
+route.push(manageSiteSetting);
+
+const manageAboutUs = {
+  title: "About Us",
+  to: { name: "aboutUs" },
+  icon: { icon: "tabler-hierarchy-3" },
+};
+route.push(manageAboutUs);
+
+const manageContactUs = {
+  title: "Contact Us",
+  to: { name: "contactUs" },
+  icon: { icon: "tabler-phone" },
+};
+route.push(manageContactUs);
+
+const manageAmenity = {
+  title: "Amenity",
   to: null,
-  icon: { icon: "tabler-building-skyscraper" },
+  icon: { icon: "tabler-list" },
   children: [
     {
       title: "Add",
-      to: { name: "schoolManagement-add" },
+      to: { name: "amenity-add" },
     },
     {
       title: "List",
-      to: { name: "schoolManagement-list" },
+      to: { name: "amenity-list" },
     },
   ],
 };
-route.push(manageSchoolManagement);
+route.push(manageAmenity);
 
-const manageBookings = {
-  title: "Bookings",
-  to: { name: "bookings" },
-  icon: { icon: "tabler-smart-home" },
+const manageResidential = {
+  title: "Residential",
+  to: null,
+  icon: { icon: "tabler-building" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "residential-add" },
+    },
+    {
+      title: "List",
+      to: { name: "residential-list" },
+    },
+  ],
 };
+route.push(manageResidential);
 
-route.push(manageBookings);
-if (auth.role == 1) {
-  const manageUser = {
-    title: "User",
-    to: null,
-    icon: { icon: "tabler-user" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "user-add" },
-      },
-      {
-        title: "List",
-        to: { name: "user-list" },
-      },
-    ],
-  };
-  route.push(manageUser);
+const managePlot = {
+  title: "Plot",
+  to: null,
+  icon: { icon: "tabler-crop-1-1" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "plot-add" },
+    },
+    {
+      title: "List",
+      to: { name: "plot-list" },
+    },
+  ],
+};
+route.push(managePlot);
 
-  // const manageBannerAndMiniBanner = {
-  //   title: "Banner & Mini Banner",
-  //   to: null,
-  //   icon: { icon: "tabler-photo" },
-  //   children: [
-  //     {
-  //       title: "Add",
-  //       to: { name: "bannerAndMiniBanner-add" },
-  //     },
-  //     {
-  //       title: "List",
-  //       to: { name: "bannerAndMiniBanner-list" },
-  //     },
-  //   ],
-  // };
-  // route.push(manageBannerAndMiniBanner);
+const manageCommercial = {
+  title: "Commercial",
+  to: null,
+  icon: { icon: "tabler-building-community" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "commercial-add" },
+    },
+    {
+      title: "List",
+      to: { name: "commercial-list" },
+    },
+  ],
+};
+route.push(manageCommercial);
 
-  const manageService = {
-    title: "Service",
-    to: null,
-    icon: { icon: "tabler-list-numbers" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "service-add" },
-      },
-      {
-        title: "List",
-        to: { name: "service-list" },
-      },
-    ],
-  };
-  route.push(manageService);
+const manageGallery = {
+  title: "Gallery",
+  to: null,
+  icon: { icon: "tabler-photo" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "gallery-add" },
+    },
+    {
+      title: "List",
+      to: { name: "gallery-list" },
+    },
+  ],
+};
+route.push(manageGallery);
 
-  const manageSubService = {
-    title: "Sub Service",
-    to: null,
-    icon: { icon: "tabler-list-numbers" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "subService-add" },
-      },
-      {
-        title: "List",
-        to: { name: "subService-list" },
-      },
-    ],
-  };
-  route.push(manageSubService);
-
-  const manageBlog = {
-    title: "Blog",
-    to: null,
-    icon: { icon: "tabler-article" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "blog-add" },
-      },
-      {
-        title: "List",
-        to: { name: "blog-list" },
-      },
-    ],
-  };
-  route.push(manageBlog);
-
-  const manageEvent = {
-    title: "Event",
-    to: null,
-    icon: { icon: "tabler-calendar-check" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "event-add" },
-      },
-      {
-        title: "List",
-        to: { name: "event-list" },
-      },
-    ],
-  };
-  route.push(manageEvent);
-
-  const manageEventSpeaker = {
-    title: "Event Speaker",
-    to: null,
-    icon: { icon: "tabler-calendar-event" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "eventSpeaker-add" },
-      },
-      {
-        title: "List",
-        to: { name: "eventSpeaker-list" },
-      },
-    ],
-  };
-  route.push(manageEventSpeaker);
-
-  const manageTestimonial = {
-    title: "Testimonial",
-    to: null,
-    icon: { icon: "tabler-message-2-check" },
-    children: [
-      {
-        title: "Add",
-        to: { name: "testimonial-add" },
-      },
-      {
-        title: "List",
-        to: { name: "testimonial-list" },
-      },
-    ],
-  };
-  route.push(manageTestimonial);
-
-  const manageAboutUs = {
-    title: "About Us",
-    to: { name: "aboutUs" },
-    icon: { icon: "tabler-info-circle" },
-  };
-  route.push(manageAboutUs);
-
-  const manageContactUs = {
-    title: "Contact Us",
-    to: { name: "contactUs" },
-    icon: { icon: "tabler-phone-call" },
-  };
-  route.push(manageContactUs);
-
-  const manageSiteSetting = {
-    title: "Site Setting",
-    to: { name: "siteSetting" },
-    icon: { icon: "tabler-settings" },
-  };
-  route.push(manageSiteSetting);
-
-  const manageSchoolOwnerDetail = {
-    title: "School Owner Detail",
-    to: { name: "schoolOwnerDetail" },
-    icon: { icon: "tabler-file-description" },
-  };
-  route.push(manageSchoolOwnerDetail);
-
-  const manageSeoManagement = {
-    title: "Seo Management",
-    to: { name: "seoManagement" },
-    icon: { icon: "tabler-seo" },
-  };
-  route.push(manageSeoManagement);
-}
+const manageOurTeam = {
+  title: "Our Team",
+  to: null,
+  icon: { icon: "tabler-users-group" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "ourTeam-add" },
+    },
+    {
+      title: "List",
+      to: { name: "ourTeam-list" },
+    },
+  ],
+};
+route.push(manageOurTeam);
 
 export default route;

@@ -74,18 +74,9 @@
               />
             </VCol>
             <VCol cols="12" md="4">
-              <AppTextField v-model="insertData.x_link" label="X Link" />
-            </VCol>
-            <VCol cols="12" md="4">
               <AppTextField
                 v-model="insertData.instagram_link"
                 label="Instagram Link"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.linkedin_link"
-                label="LinkedIn Link"
               />
             </VCol>
             <VCol cols="12" md="4">
@@ -99,12 +90,6 @@
                 v-model="insertData.whatsapp_number"
                 type="number"
                 label="Whatsapp Number"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.platform_fee"
-                label="Platform Fee"
               />
             </VCol>
             <VCol cols="12" md="6">
@@ -162,12 +147,9 @@ export default {
         phone_number2: "",
         address: "",
         facebook_link: "",
-        x_link: "",
         instagram_link: "",
-        linkedin_link: "",
         youtube_link: "",
         whatsapp_number: "",
-        platform_fee: "",
         iframe: "",
         video_link: "",
       },
@@ -184,7 +166,7 @@ export default {
     fetchData() {
       this.loader = true;
       http
-        .get("/site-setting-show")
+        .get("/user-side/site-setting-show")
         .then((res) => {
           if (res.data.success) {
             this.insertData.email1 = res.data.data.email1;
@@ -193,12 +175,9 @@ export default {
             this.insertData.phone_number2 = res.data.data.phone_number2;
             this.insertData.address = res.data.data.address;
             this.insertData.facebook_link = res.data.data.facebook_link;
-            this.insertData.x_link = res.data.data.x_link;
             this.insertData.instagram_link = res.data.data.instagram_link;
-            this.insertData.linkedin_link = res.data.data.linkedin_link;
             this.insertData.youtube_link = res.data.data.youtube_link;
             this.insertData.whatsapp_number = res.data.data.whatsapp_number;
-            this.insertData.platform_fee = res.data.data.platform_fee;
             this.insertData.iframe = res.data.data.iframe;
             this.insertData.video_link = res.data.data.video_link;
             this.fetch_photo = res.data.data.logo;

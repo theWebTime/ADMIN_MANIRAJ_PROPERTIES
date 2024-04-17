@@ -29,10 +29,8 @@
               @keyup="fetchData()"
             />
           </div>
-          <router-link
-            :to="'/schoolManagement/manageSchoolPlan/add/' + this.paramsId"
-          >
-            <VBtn prepend-icon="tabler-plus"> Add School Plan </VBtn>
+          <router-link to="/plot/add">
+            <VBtn prepend-icon="tabler-plus"> Add Plot</VBtn>
           </router-link>
         </div>
       </VCardText>
@@ -42,8 +40,7 @@
           <thead>
             <tr>
               <th class="text-uppercase">ID.</th>
-              <th class="text-uppercase text-center">Title</th>
-              <th class="text-uppercase text-center">Amount</th>
+              <th class="text-uppercase text-center">Location</th>
               <th class="text-uppercase text-center">Status</th>
               <th class="text-uppercase text-center">Action</th>
             </tr>
@@ -55,21 +52,13 @@
                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
               </td>
               <td class="text-center">
-                {{ item.title }}
-              </td>
-              <td class="text-center">
-                {{ item.amount }}
+                {{ item.location }}
               </td>
               <td class="text-center">
                 {{ item.status == 1 ? "Active" : "In-Active" }}
               </td>
               <td class="text-center">
-                <router-link
-                  :to="
-                    '/schoolManagement/manageSchoolPlan/editSchoolPlan/' +
-                    item.id
-                  "
-                >
+                <router-link :to="'/plot/editPlot/' + item.id">
                   <IconBtn>
                     <VIcon :icon="'tabler-edit-circle'" />
 
@@ -107,11 +96,11 @@
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="closeDeletePopup()" />
       <!-- Dialog Content -->
-      <VCard title="Are you Sure to delete?">
-        <VCardText class="d-flex justify-end">
-          <VBtn @click="deleteData()"> Yes </VBtn>
-        </VCardText>
-      </VCard>
+      <!-- <VCard title="Are you Sure to delete?">
+            <VCardText class="d-flex justify-end">
+              <VBtn @click="deleteData()"> Yes </VBtn>
+            </VCardText>
+          </VCard> -->
     </VDialog>
   </div>
 </template>
@@ -119,7 +108,7 @@
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
-import http from "../../../http-common";
+import http from "../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -145,7 +134,6 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
       },
-      paramsId: this.$route.params.id,
       editableId: null,
       errors: {},
       isAlertVisible: false,
@@ -163,9 +151,7 @@ export default {
       this.loader = true;
       http
         .get(
-          "/school-plan/index/" +
-            this.paramsId +
-            "?page=" +
+          "/plot/index?page=" +
             this.options.page +
             "&itemsPerPage=" +
             this.options.itemsPerPage +
@@ -201,24 +187,24 @@ export default {
       return `Showing ${start} to ${end} of ${total} entries`;
     },
 
-    deleteData() {
-      http
-        .post("/school-plan/delete/" + this.editableId, {})
-        .then((res) => {
-          if (res.data.success) {
-            this.fetchData();
-            this.$toast.success(res.data.message);
-          } else {
-            this.$toast.error(res.data.message);
-          }
-          this.editableId = "";
-          this.isDeleteDialogVisible = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isDeleteDialogVisible = false;
-        });
-    },
+    /* deleteData() {
+          http
+            .post("/event-speaker/delete/" + this.editableId, {})
+            .then((res) => {
+              if (res.data.success) {
+                this.fetchData();
+                this.$toast.success(res.data.message);
+              } else {
+                this.$toast.error(res.data.message);
+              }
+              this.editableId = "";
+              this.isDeleteDialogVisible = false;
+            })
+            .catch((e) => {
+              console.log(e);
+              this.isDeleteDialogVisible = false;
+            });
+        }, */
   },
 };
 </script>

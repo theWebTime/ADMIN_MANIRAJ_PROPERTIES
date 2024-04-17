@@ -18,6 +18,21 @@
           />
         </div>
         <VSpacer />
+
+        <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
+          <!-- 👉 Search  -->
+          <div style="inline-size: 10rem">
+            <AppTextField
+              v-model="options.search"
+              placeholder="Search"
+              density="compact"
+              @keyup="fetchData()"
+            />
+          </div>
+          <router-link to="/commercial/add">
+            <VBtn prepend-icon="tabler-plus"> Add Commercial</VBtn>
+          </router-link>
+        </div>
       </VCardText>
       <VDivider />
       <v-skeleton-loader type="table" :loading="loader">
@@ -25,11 +40,9 @@
           <thead>
             <tr>
               <th class="text-uppercase">ID.</th>
-              <th class="text-uppercase text-center">Name</th>
-              <th class="text-uppercase text-center">Email</th>
-              <th class="text-uppercase text-center">Message</th>
-              <th class="text-uppercase text-center">Private Message</th>
-              <th class="text-uppercase text-center">Phone Number</th>
+              <th class="text-uppercase text-center">Location</th>
+              <th class="text-uppercase text-center">Status</th>
+              <th class="text-uppercase text-center">Action</th>
             </tr>
           </thead>
 
@@ -39,19 +52,21 @@
                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
               </td>
               <td class="text-center">
-                {{ item.name }}
+                {{ item.location }}
               </td>
               <td class="text-center">
-                {{ item.email }}
+                {{ item.status == 1 ? "Active" : "In-Active" }}
               </td>
               <td class="text-center">
-                {{ item.message }}
-              </td>
-              <td class="text-center">
-                {{ item.private_message }}
-              </td>
-              <td class="text-center">
-                {{ item.phone_number }}
+                <router-link :to="'/commercial/editCommercial/' + item.id">
+                  <IconBtn>
+                    <VIcon :icon="'tabler-edit-circle'" />
+
+                    <VTooltip activator="parent" location="start">
+                      Edit Data
+                    </VTooltip>
+                  </IconBtn>
+                </router-link>
               </td>
             </tr>
           </tbody>
@@ -77,13 +92,23 @@
         </VPagination>
       </div>
     </VCard>
+    <VDialog v-model="isDeleteDialogVisible" width="500">
+      <!-- Dialog close btn -->
+      <DialogCloseBtn @click="closeDeletePopup()" />
+      <!-- Dialog Content -->
+      <!-- <VCard title="Are you Sure to delete?">
+              <VCardText class="d-flex justify-end">
+                <VBtn @click="deleteData()"> Yes </VBtn>
+              </VCardText>
+            </VCard> -->
+    </VDialog>
   </div>
 </template>
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
-import http from "../http-common";
+import http from "../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -122,27 +147,64 @@ export default {
       this.options.page = this.options.page;
       this.fetchData();
     },
-    async fetchData() {
+    fetchData() {
       this.loader = true;
-      await http
-        .get("/contact-us-show/")
+      http
+        .get(
+          "/commercial/index?page=" +
+            this.options.page +
+            "&itemsPerPage=" +
+            this.options.itemsPerPage +
+            "&search=" +
+            this.options.search
+        )
         .then((res) => {
           if (res.data.success) {
-            const resData = res.data.data;
-            this.data = resData;
+            this.data = res.data.data;
           }
+          this.loader = false;
         })
         .catch((e) => {
+          this.loader = false;
           console.log(e);
         });
-      this.loader = false;
     },
+
+    openDeletePopup(val) {
+      this.editableId = val;
+      this.isDeleteDialogVisible = true;
+    },
+
+    closeDeletePopup() {
+      this.editableId = "";
+      this.isDeleteDialogVisible = false;
+    },
+
     paginationMeta(options, total) {
       const start = (options.page - 1) * options.itemsPerPage + 1;
       const end = Math.min(options.page * options.itemsPerPage, total);
 
       return `Showing ${start} to ${end} of ${total} entries`;
     },
+
+    /* deleteData() {
+            http
+              .post("/event-speaker/delete/" + this.editableId, {})
+              .then((res) => {
+                if (res.data.success) {
+                  this.fetchData();
+                  this.$toast.success(res.data.message);
+                } else {
+                  this.$toast.error(res.data.message);
+                }
+                this.editableId = "";
+                this.isDeleteDialogVisible = false;
+              })
+              .catch((e) => {
+                console.log(e);
+                this.isDeleteDialogVisible = false;
+              });
+          }, */
   },
 };
 </script>

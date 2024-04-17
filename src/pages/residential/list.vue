@@ -30,7 +30,7 @@
             />
           </div>
           <router-link to="/schoolManagement/add">
-            <VBtn prepend-icon="tabler-plus"> Add School Management</VBtn>
+            <VBtn prepend-icon="tabler-plus"> Add Residential</VBtn>
           </router-link>
         </div>
       </VCardText>
@@ -40,9 +40,7 @@
           <thead>
             <tr>
               <th class="text-uppercase">ID.</th>
-              <th class="text-uppercase text-center">User Name</th>
-              <th class="text-uppercase text-center">School Name</th>
-              <th class="text-uppercase text-center">Contact Number</th>
+              <th class="text-uppercase text-center">Name</th>
               <th class="text-uppercase text-center">Status</th>
               <th class="text-uppercase text-center">Action</th>
             </tr>
@@ -57,17 +55,21 @@
                 {{ item.name }}
               </td>
               <td class="text-center">
-                {{ item.school_name }}
-              </td>
-              <td class="text-center">
-                {{ item.contact_number }}
-              </td>
-              <td class="text-center">
                 {{ item.status == 1 ? "Active" : "In-Active" }}
               </td>
               <td class="text-center">
+                <router-link :to="'/residential/editResidential/' + item.id">
+                  <IconBtn>
+                    <VIcon :icon="'tabler-edit-circle'" />
+
+                    <VTooltip activator="parent" location="start">
+                      Edit Data
+                    </VTooltip>
+                  </IconBtn>
+                </router-link>
+                |
                 <router-link
-                  :to="'/schoolManagement/manageSchoolGallery/list/' + item.id"
+                  :to="'/residential/manageResidentialGallery/list/' + item.id"
                 >
                   <IconBtn>
                     <VIcon :icon="'tabler-brand-google-photos'" />
@@ -77,8 +79,9 @@
                     </VTooltip>
                   </IconBtn>
                 </router-link>
-                |<router-link
-                  :to="'/schoolManagement/manageSchoolPlan/list/' + item.id"
+                |
+                <router-link
+                  :to="'/residential/manageResidentialAmenity/list/' + item.id"
                 >
                   <IconBtn>
                     <VIcon :icon="'tabler-list'" />
@@ -88,28 +91,6 @@
                     </VTooltip>
                   </IconBtn>
                 </router-link>
-                |<router-link
-                  :to="'/schoolManagement/editSchoolManagement/' + item.id"
-                >
-                  <IconBtn>
-                    <VIcon :icon="'tabler-edit-circle'" />
-
-                    <VTooltip activator="parent" location="start">
-                      Edit Data
-                    </VTooltip>
-                  </IconBtn>
-                </router-link>
-                <!-- |
-                <IconBtn>
-                  <VIcon
-                    class="text-primary"
-                    :icon="'tabler-trash-filled'"
-                    @click="openDeletePopup(item.id)"
-                  />
-                  <VTooltip activator="parent" location="start">
-                    Delete Data
-                  </VTooltip>
-                </IconBtn> -->
               </td>
             </tr>
           </tbody>
@@ -139,11 +120,11 @@
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="closeDeletePopup()" />
       <!-- Dialog Content -->
-      <VCard title="Are you Sure to delete?">
-        <VCardText class="d-flex justify-end">
-          <VBtn @click="deleteData()"> Yes </VBtn>
-        </VCardText>
-      </VCard>
+      <!-- <VCard title="Are you Sure to delete?">
+          <VCardText class="d-flex justify-end">
+            <VBtn @click="deleteData()"> Yes </VBtn>
+          </VCardText>
+        </VCard> -->
     </VDialog>
   </div>
 </template>
@@ -194,7 +175,7 @@ export default {
       this.loader = true;
       http
         .get(
-          "/school-management/index?page=" +
+          "/residential/index?page=" +
             this.options.page +
             "&itemsPerPage=" +
             this.options.itemsPerPage +
@@ -230,24 +211,24 @@ export default {
       return `Showing ${start} to ${end} of ${total} entries`;
     },
 
-    deleteData() {
-      http
-        .post("/event-speaker/delete/" + this.editableId, {})
-        .then((res) => {
-          if (res.data.success) {
-            this.fetchData();
-            this.$toast.success(res.data.message);
-          } else {
-            this.$toast.error(res.data.message);
-          }
-          this.editableId = "";
-          this.isDeleteDialogVisible = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isDeleteDialogVisible = false;
-        });
-    },
+    /* deleteData() {
+        http
+          .post("/event-speaker/delete/" + this.editableId, {})
+          .then((res) => {
+            if (res.data.success) {
+              this.fetchData();
+              this.$toast.success(res.data.message);
+            } else {
+              this.$toast.error(res.data.message);
+            }
+            this.editableId = "";
+            this.isDeleteDialogVisible = false;
+          })
+          .catch((e) => {
+            console.log(e);
+            this.isDeleteDialogVisible = false;
+          });
+      }, */
   },
 };
 </script>

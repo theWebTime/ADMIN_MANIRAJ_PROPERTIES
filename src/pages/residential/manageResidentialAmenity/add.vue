@@ -1,7 +1,7 @@
 <template>
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-    <VCard title="Add School Plan">
+    <VCard title="Add Residential Amenity">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -17,39 +17,13 @@
         <VCardText>
           <VRow>
             <VCol cols="12" md="4">
-              <AppTextField
-                :rules="[globalRequire, nameMin].flat()"
-                v-model="insertData.title"
-                label="Title"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.amount"
-                type="number"
+              <AppSelect
+                v-model="insertData.amenities_id"
+                :items="data_fetch_property_amenity"
                 :rules="[globalRequire].flat()"
-                label="Amount"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
-              <AppTextField
-                v-model="insertData.total_days"
-                :rules="[globalRequire].flat()"
-                type="number"
-                label="Total Days"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <v-textarea
-                v-model="insertData.terms_and_condition"
-                :rules="[globalRequire].flat()"
-                label="Terms and Conditions"
-              /> </VCol
-            ><VCol cols="12" md="6">
-              <v-textarea
-                v-model="insertData.description"
-                :rules="[globalRequire].flat()"
-                label="Description"
+                item-title="name"
+                item-value="id"
+                label="Residential Amenity"
               />
             </VCol>
           </VRow>
@@ -92,29 +66,41 @@ export default {
         },
       ],
       insertData: {
-        title: "",
-        amount: "",
-        total_days: "",
-        terms_and_condition: "",
-        description: "",
+        amenities_id: "",
+        residential_amenity_store: this.$route.params.id,
       },
+      data_fetch_property_amenity: "",
       loader: false,
-      paramsId: this.$route.params.id,
       errors: {},
       isAlertVisible: false,
     };
   },
+  created() {
+    this.fetch_property_amenity();
+  },
   methods: {
+    fetch_property_amenity() {
+      http
+        .get("/amenity-of-property-listing")
+        .then((res) => {
+          if (res.data.success) {
+            this.data_fetch_property_amenity = res.data.data;
+          }
+        })
+        .catch((e) => {
+          this.$toast.error("Something went wrong");
+        });
+    },
     async saveData() {
       const checkValidation = await this.$refs.formSubmit.validate();
       if (checkValidation.valid) {
         this.loader = true;
         http
-          .post("/school-plan/store/" + this.paramsId, this.insertData)
+          .post("/residential-amenity/store", this.insertData)
           .then((res) => {
             if (res.data.success) {
               this.$router.push({
-                path: "/schoolManagement/list/",
+                path: "/residential/list/",
               });
               this.$toast.success(res.data.message);
               this.isAlertVisible = false;

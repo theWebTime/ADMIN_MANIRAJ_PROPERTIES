@@ -20,10 +20,17 @@
         <VSpacer />
 
         <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-          <router-link
-            :to="'/schoolManagement/manageSchoolGallery/add/' + this.paramsId"
-          >
-            <VBtn prepend-icon="tabler-plus"> Add School Gallery </VBtn>
+          <!-- 👉 Search  -->
+          <div style="inline-size: 10rem">
+            <AppTextField
+              v-model="options.search"
+              placeholder="Search"
+              density="compact"
+              @keyup="fetchData()"
+            />
+          </div>
+          <router-link to="/ourTeam/add">
+            <VBtn prepend-icon="tabler-plus"> Add Our Team</VBtn>
           </router-link>
         </div>
       </VCardText>
@@ -33,7 +40,8 @@
           <thead>
             <tr>
               <th class="text-uppercase">ID.</th>
-              <th class="text-uppercase text-center">Image</th>
+              <th class="text-uppercase text-center">Name</th>
+              <th class="text-uppercase text-center">Role</th>
               <th class="text-uppercase text-center">Action</th>
             </tr>
           </thead>
@@ -44,21 +52,20 @@
                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
               </td>
               <td class="text-center">
-                <VAvatar size="48">
-                  <VImg :src="item.data" />
-                </VAvatar>
+                {{ item.name }}
               </td>
               <td class="text-center">
-                <IconBtn>
-                  <VIcon
-                    class="text-primary"
-                    :icon="'tabler-trash-filled'"
-                    @click="openDeletePopup(item.id)"
-                  />
-                  <VTooltip activator="parent" location="start">
-                    Delete Data
-                  </VTooltip>
-                </IconBtn>
+                {{ item.role }}
+              </td>
+              <td class="text-center">
+                <router-link :to="'/ourTeam/editOurTeam/' + item.id">
+                  <IconBtn>
+                    <VIcon :icon="'tabler-edit-circle'" />
+                    <VTooltip activator="parent" location="start">
+                      Edit Data
+                    </VTooltip>
+                  </IconBtn>
+                </router-link>
               </td>
             </tr>
           </tbody>
@@ -88,11 +95,11 @@
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="closeDeletePopup()" />
       <!-- Dialog Content -->
-      <VCard title="Are you Sure to delete?">
-        <VCardText class="d-flex justify-end">
-          <VBtn @click="deleteData()"> Yes </VBtn>
-        </VCardText>
-      </VCard>
+      <!-- <VCard title="Are you Sure to delete?">
+            <VCardText class="d-flex justify-end">
+              <VBtn @click="deleteData()"> Yes </VBtn>
+            </VCardText>
+          </VCard> -->
     </VDialog>
   </div>
 </template>
@@ -100,7 +107,7 @@
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
-import http from "../../../http-common";
+import http from "../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -126,7 +133,6 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
       },
-      paramsId: this.$route.params.id,
       editableId: null,
       errors: {},
       isAlertVisible: false,
@@ -144,9 +150,7 @@ export default {
       this.loader = true;
       http
         .get(
-          "/school-gallery/index/" +
-            this.paramsId +
-            "?page=" +
+          "/our-team/index?page=" +
             this.options.page +
             "&itemsPerPage=" +
             this.options.itemsPerPage +
@@ -182,24 +186,24 @@ export default {
       return `Showing ${start} to ${end} of ${total} entries`;
     },
 
-    deleteData() {
-      http
-        .post("/school-gallery/delete/" + this.editableId, {})
-        .then((res) => {
-          if (res.data.success) {
-            this.fetchData();
-            this.$toast.success(res.data.message);
-          } else {
-            this.$toast.error(res.data.message);
-          }
-          this.editableId = "";
-          this.isDeleteDialogVisible = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isDeleteDialogVisible = false;
-        });
-    },
+    /* deleteData() {
+          http
+            .post("/event-speaker/delete/" + this.editableId, {})
+            .then((res) => {
+              if (res.data.success) {
+                this.fetchData();
+                this.$toast.success(res.data.message);
+              } else {
+                this.$toast.error(res.data.message);
+              }
+              this.editableId = "";
+              this.isDeleteDialogVisible = false;
+            })
+            .catch((e) => {
+              console.log(e);
+              this.isDeleteDialogVisible = false;
+            });
+        }, */
   },
 };
 </script>

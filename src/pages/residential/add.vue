@@ -1,9 +1,7 @@
 <template>
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-    <br />
-    <VDivider />
-    <VCard>
+    <VCard title="Add Residential">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -17,8 +15,6 @@
       </VAlert>
       <VForm ref="formSubmit">
         <VCardText>
-          <h3>Update About Us</h3>
-          <br />
           <VRow>
             <VCol cols="12" md="6">
               <v-file-input
@@ -28,74 +24,75 @@
                 ref="file"
               ></v-file-input>
             </VCol>
-            <VCol cols="12" md="6">
-              <VAvatar size="48">
-                <VImg :src="fetch_photo" />
-              </VAvatar>
-            </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
               <AppTextField
-                v-model="insertData.title"
                 :rules="[globalRequire].flat()"
-                label="Title"
+                v-model="insertData.name"
+                label="Name"
               />
             </VCol>
-            <VCol cols="12" md="6" class="editor-layout">
-              <QuillEditor
-                theme="snow"
-                v-model:content="insertData.description"
-                contentType="html"
+            <VCol cols="12" md="4">
+              <v-textarea
+                v-model="insertData.description"
                 label="Description"
-                :options="options"
+              />
+            </VCol>
+            <VCol cols="12" md="4">
+              <AppSelect
+                v-model="insertData.type_of_property_id"
+                :items="data_fetch_type_of_property"
+                :rules="[globalRequire].flat()"
+                item-title="no_bhk"
+                item-value="id"
+                label="Type Of Property"
+              />
+            </VCol>
+            <VCol cols="12" md="4">
+              <AppTextField
+                :rules="[globalRequire].flat()"
+                v-model="insertData.square_yard"
+                label="Square Yard"
+              />
+            </VCol>
+            <VCol cols="12" md="4">
+              <AppSelect
+                v-model="insertData.status_id"
+                :items="data_fetch_property_status"
+                :rules="[globalRequire].flat()"
+                item-title="name"
+                item-value="id"
+                label="Property Status"
+              />
+            </VCol>
+            <VCol cols="12" md="4">
+              <AppTextField
+                v-model="insertData.shop_square_feet"
+                label="Shop Square feet"
+              />
+            </VCol>
+
+            <VCol cols="12" md="4">
+              <v-textarea v-model="insertData.iframe" label="IFrame" />
+            </VCol>
+            <VCol cols="12" md="4">
+              <v-textarea
+                v-model="insertData.location"
+                :rules="[globalRequire].flat()"
+                label="Location"
               />
             </VCol>
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.hand_of_experience"
-                :rules="[globalRequire].flat()"
-                label="Hand Of Experience"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.million_square_feet"
-                :rules="[globalRequire].flat()"
-                label="Million Square Feet"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.units"
-                :rules="[globalRequire].flat()"
-                label="Units"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.residential_property"
-                :rules="[globalRequire].flat()"
-                label="Residential Property"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.commercial_property"
-                :rules="[globalRequire].flat()"
-                label="Commercial Property"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                v-model="insertData.plots"
-                :rules="[globalRequire].flat()"
-                label="Plot"
-              />
+              <v-file-input
+                accept="file/*"
+                v-model="brochure"
+                label="File"
+                ref="file1"
+              ></v-file-input>
             </VCol>
           </VRow>
         </VCardText>
-
         <VCardText class="d-flex justify-end flex-wrap gap-3">
-          <VBtn @click="updateData"> Update </VBtn>
+          <VBtn @click="saveData"> Save </VBtn>
         </VCardText>
       </VForm>
     </VCard>
@@ -110,15 +107,11 @@
     </VDialog>
   </div>
 </template>
-
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import http from "../http-common";
+import http from "../../http-common";
 export default {
   components: {
-    QuillEditor,
     GlobalBreadCrumbsVue,
   },
   data() {
@@ -129,59 +122,67 @@ export default {
           return "Required.";
         },
       ],
-      options: {
-        placeholder: "Enter text",
-      },
+      nameMin: [
+        (value) => {
+          if (value?.length >= 3) return true;
+          return "Must be at least 3 characters.";
+        },
+      ],
+      email: [
+        (v) =>
+          !v ||
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          "Email must be valid",
+      ],
+      brochure: "",
       image: "",
-      fetch_photo: "",
       insertData: {
-        title: "",
+        name: "",
         description: "",
-        hand_of_experience: "",
-        million_square_feet: "",
-        units: "",
-        residential_property: "",
-        commercial_property: "",
-        plots: "",
+        type_of_property_id: "",
+        square_yard: "",
+        status_id: "",
+        shop_square_feet: "",
+        iframe: "",
+        location: "",
       },
+      data_fetch_type_of_property: "",
+      data_fetch_property_status: "",
       loader: false,
-      paramsId: this.$route.params.id,
       errors: {},
       isAlertVisible: false,
     };
   },
   created() {
-    this.fetchData();
+    this.fetch_type_of_property();
+    this.fetch_property_status();
   },
   methods: {
-    fetchData() {
-      this.loader = true;
+    fetch_type_of_property() {
       http
-        .get("/user-side/show-about-us")
+        .get("/type-of-property-listing")
         .then((res) => {
           if (res.data.success) {
-            this.insertData.title = res.data.data.title;
-            this.insertData.description = res.data.data.description;
-            this.insertData.hand_of_experience =
-              res.data.data.hand_of_experience;
-            this.insertData.million_square_feet =
-              res.data.data.million_square_feet;
-            this.insertData.units = res.data.data.units;
-            this.insertData.residential_property =
-              res.data.data.residential_property;
-            this.insertData.commercial_property =
-              res.data.data.commercial_property;
-            this.insertData.plots = res.data.data.plots;
-            this.fetch_photo = res.data.data.image;
+            this.data_fetch_type_of_property = res.data.data;
           }
-          this.loader = false;
         })
         .catch((e) => {
-          this.loader = false;
-          console.log(e);
+          this.$toast.error("Something went wrong");
         });
     },
-    async updateData() {
+    fetch_property_status() {
+      http
+        .get("/status-of-property-listing")
+        .then((res) => {
+          if (res.data.success) {
+            this.data_fetch_property_status = res.data.data;
+          }
+        })
+        .catch((e) => {
+          this.$toast.error("Something went wrong");
+        });
+    },
+    async saveData() {
       const checkValidation = await this.$refs.formSubmit.validate();
       if (checkValidation.valid) {
         const formData = new FormData();
@@ -194,33 +195,38 @@ export default {
         for (let x in this.insertData) {
           formData.append(x, this.insertData[x]);
         }
+        if (this.brochure) {
+          const imageData1 = this.$refs.file1.files[0];
+          formData.append("brochure", imageData1);
+        } else {
+          formData.append("brochure", "");
+        }
+        for (let x in this.insertData) {
+          formData.append(x, this.insertData[x]);
+        }
         this.loader = true;
         http
-          .post("about-us/store", formData)
+          .post("/residential/store", formData)
           .then((res) => {
             if (res.data.success) {
-              this.fetchData();
+              this.$router.push({
+                path: "/residential/list/",
+              });
               this.$toast.success(res.data.message);
               this.isAlertVisible = false;
             } else {
               this.$toast.error(res.data.message);
               this.errors = res.data.data;
-              console.log(this.errors);
               this.isAlertVisible = true;
             }
             this.loader = false;
           })
           .catch((e) => {
             this.loader = false;
+            console.log(e);
           });
       }
     },
   },
 };
 </script>
-<style scoped>
-.editor-layout {
-  width: 100%;
-  height: 100%;
-}
-</style>

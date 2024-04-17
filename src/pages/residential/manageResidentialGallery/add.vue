@@ -1,7 +1,7 @@
 <template>
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-    <VCard title="Add School Gallery">
+    <VCard title="Add Residential Gallery">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -19,7 +19,7 @@
             <VCol cols="12" md="6">
               <v-file-input
                 accept="image/*"
-                v-model="images"
+                v-model="files"
                 label="Image"
                 ref="file"
                 multiple
@@ -65,9 +65,9 @@ export default {
           return "Must be at least 3 characters.";
         },
       ],
-      images: {},
+      files: {},
       data: "",
-      paramsId: this.$route.params.id,
+      residential_gallery_store: this.$route.params.id,
       loader: false,
       errors: {},
       isAlertVisible: false,
@@ -80,14 +80,17 @@ export default {
         let file = this.$refs.file.files[i];
         formData.append("files[" + i + "]", file);
       }
-      formData.append("user_id", this.paramsId);
+      formData.append(
+        "residential_gallery_store",
+        this.residential_gallery_store
+      );
       this.loader = true;
       http
-        .post("school-gallery/store/" + this.paramsId, formData)
+        .post("residential-gallery/store", formData)
         .then((res) => {
           if (res.data.success) {
             this.$router.push({
-              path: "/schoolManagement/list/",
+              path: "/residential/list/",
             });
             this.$toast.success(res.data.message);
             this.isAlertVisible = false;
