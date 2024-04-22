@@ -24,14 +24,14 @@
                 ref="file"
               ></v-file-input>
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppTextField
                 :rules="[globalRequire].flat()"
                 v-model="insertData.name"
                 label="Name"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppTextField
                 :rules="[globalRequire].flat()"
                 v-model="insertData.role"

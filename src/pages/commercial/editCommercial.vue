@@ -17,24 +17,24 @@
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea v-model="insertData.iframe" label="IFrame" />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea
                 v-model="insertData.location"
                 :rules="[globalRequire].flat()"
                 label="Location"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppTextField
                 :rules="[globalRequire].flat()"
                 v-model="insertData.square_feet"
                 label="Square Feet"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppSelect
                 v-model="insertData.status_id"
                 :items="data_fetch_property_status"
@@ -44,7 +44,7 @@
                 label="Property Status"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppSelect
                 v-model="insertData.commercial_type_id"
                 :items="data_fetch_commercial_type"
@@ -54,7 +54,7 @@
                 label="Type Of Commercial"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <VRadioGroup v-model="insertData.status" inline label="Status">
                 <VRadio label="Active" :value="1" density="compact" />
                 <VRadio label="In-Active" :value="0" density="compact" />

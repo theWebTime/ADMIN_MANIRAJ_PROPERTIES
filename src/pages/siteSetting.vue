@@ -36,7 +36,7 @@
             <VCol cols="12" md="4">
               <AppTextField
                 v-model="insertData.email1"
-                :rules="[email].flat()"
+                :rules="[globalRequire, email].flat()"
                 label="Email"
               />
             </VCol>
@@ -52,18 +52,20 @@
                 v-model="insertData.phone_number1"
                 type="number"
                 label="Phone Number"
+                :rules="[globalRequire].flat()"
               />
             </VCol>
             <VCol cols="12" md="4">
               <AppTextField
                 v-model="insertData.phone_number2"
                 type="number"
-                label="Mobile Number"
+                label="Phone Number 2"
               />
             </VCol>
             <VCol cols="12" md="4">
               <AppTextField
                 v-model="insertData.address"
+                :rules="[globalRequire].flat()"
                 label="Street Address"
               />
             </VCol>
@@ -89,11 +91,16 @@
               <AppTextField
                 v-model="insertData.whatsapp_number"
                 type="number"
+                :rules="[globalRequire].flat()"
                 label="Whatsapp Number"
               />
             </VCol>
             <VCol cols="12" md="6">
-              <v-textarea v-model="insertData.iframe" label="Iframe" />
+              <v-textarea
+                v-model="insertData.iframe"
+                :rules="[globalRequire].flat()"
+                label="Iframe"
+              />
             </VCol>
             <VCol cols="12" md="6">
               <v-textarea v-model="insertData.video_link" label="Video Link" />
@@ -180,7 +187,8 @@ export default {
             this.insertData.whatsapp_number = res.data.data.whatsapp_number;
             this.insertData.iframe = res.data.data.iframe;
             this.insertData.video_link = res.data.data.video_link;
-            this.fetch_photo = res.data.data.logo;
+            this.fetch_photo =
+              res.data.data.logo == null ? "" : res.data.data.logo;
           }
           this.loader = false;
         })

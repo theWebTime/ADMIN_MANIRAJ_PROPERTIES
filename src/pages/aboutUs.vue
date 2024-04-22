@@ -161,7 +161,10 @@ export default {
         .then((res) => {
           if (res.data.success) {
             this.insertData.title = res.data.data.title;
-            this.insertData.description = res.data.data.description;
+            this.insertData.description =
+              res.data.data.description == null
+                ? ""
+                : res.data.data.description;
             this.insertData.hand_of_experience =
               res.data.data.hand_of_experience;
             this.insertData.million_square_feet =
@@ -172,7 +175,8 @@ export default {
             this.insertData.commercial_property =
               res.data.data.commercial_property;
             this.insertData.plots = res.data.data.plots;
-            this.fetch_photo = res.data.data.image;
+            this.fetch_photo =
+              res.data.data.image == null ? "" : res.data.data.image;
           }
           this.loader = false;
         })

@@ -16,24 +16,24 @@
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea v-model="insertData.iframe" label="IFrame" />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea
                 v-model="insertData.location"
                 :rules="[globalRequire].flat()"
                 label="Location"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppTextField
                 :rules="[globalRequire].flat()"
                 v-model="insertData.square_yard"
                 label="Square Yard"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <AppSelect
                 v-model="insertData.status_id"
                 :items="data_fetch_property_status"

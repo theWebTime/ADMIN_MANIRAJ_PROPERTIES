@@ -16,10 +16,10 @@
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea v-model="insertData.iframe" label="IFrame" />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="6">
               <v-textarea
                 v-model="insertData.location"
                 :rules="[globalRequire].flat()"

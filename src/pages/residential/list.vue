@@ -29,7 +29,7 @@
               @keyup="fetchData()"
             />
           </div>
-          <router-link to="/schoolManagement/add">
+          <router-link to="/residential/add">
             <VBtn prepend-icon="tabler-plus"> Add Residential</VBtn>
           </router-link>
         </div>
@@ -87,7 +87,7 @@
                     <VIcon :icon="'tabler-list'" />
 
                     <VTooltip activator="parent" location="start">
-                      Edit Plans
+                      Edit Amenity
                     </VTooltip>
                   </IconBtn>
                 </router-link>

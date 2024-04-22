@@ -221,8 +221,8 @@ export default {
             this.insertData.iframe = resData.iframe;
             this.insertData.location = resData.location;
             this.insertData.status = resData.status;
-            this.fetch_photo = resData.image;
-            this.fetch_file = resData.brochure;
+            this.fetch_photo = resData.image == null ? "" : resData.image;
+            this.fetch_file = resData.brochure == null ? "" : resData.brochure;
           }
         })
         .catch((e) => {
