@@ -36,16 +36,16 @@
             <VCol cols="12" md="6">
               <AppTextField
                 v-model="insertData.title"
-                :rules="[globalRequire].flat()"
+                :rules="[globalRequire, nameMin].flat()"
                 label="Title"
               />
             </VCol>
-            <VCol cols="12" md="6" class="editor-layout">
+            <VCol cols="12" md="6" class="editor-layout"
+              ><label>Description</label>
               <QuillEditor
                 theme="snow"
                 v-model:content="insertData.description"
                 contentType="html"
-                label="Description"
                 :options="options"
               />
             </VCol>
@@ -53,6 +53,7 @@
               <AppTextField
                 v-model="insertData.hand_of_experience"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Hand Of Experience"
               />
             </VCol>
@@ -60,6 +61,7 @@
               <AppTextField
                 v-model="insertData.million_square_feet"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Million Square Feet"
               />
             </VCol>
@@ -67,6 +69,7 @@
               <AppTextField
                 v-model="insertData.units"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Units"
               />
             </VCol>
@@ -74,6 +77,7 @@
               <AppTextField
                 v-model="insertData.residential_property"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Residential Property"
               />
             </VCol>
@@ -81,6 +85,7 @@
               <AppTextField
                 v-model="insertData.commercial_property"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Commercial Property"
               />
             </VCol>
@@ -88,6 +93,7 @@
               <AppTextField
                 v-model="insertData.plots"
                 :rules="[globalRequire].flat()"
+                type="number"
                 label="Plot"
               />
             </VCol>
@@ -127,6 +133,16 @@ export default {
         (value) => {
           if (value) return true;
           return "Required.";
+        },
+      ],
+      nameMin: [
+        (value) => {
+          if (value?.length <= 100) return true;
+          return "Title should be at least 100 characters.";
+        },
+        (value) => {
+          if (value?.length >= 5) return true;
+          return "Title should be at least 5 characters.";
         },
       ],
       options: {

@@ -125,8 +125,8 @@ export default {
         required: (value) => !!value || "Required.",
       },
       paramsId: this.$route.params.id,
-      residential_amenity_index: this.$route.params.id,
-      residential_amenity_delete: this.$route.params.id,
+      id: this.$route.params.id,
+      amenity_id: this.$route.params.id,
       editableId: null,
       errors: {},
       isAlertVisible: false,
@@ -145,7 +145,7 @@ export default {
       http
         .post(
           "/residential-amenity/index",
-          { residential_amenity_index: this.residential_amenity_index },
+          { id: this.id },
           +"?page=" +
             this.options.page +
             "&itemsPerPage=" +
@@ -185,7 +185,7 @@ export default {
     deleteData() {
       http
         .post("/residential-amenity/delete", {
-          residential_amenity_delete: this.editableId,
+          amenity_id: this.editableId,
         })
         .then((res) => {
           if (res.data.success) {

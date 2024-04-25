@@ -67,7 +67,7 @@ export default {
       ],
       files: {},
       data: "",
-      residential_gallery_store: this.$route.params.id,
+      residentials_id: this.$route.params.id,
       loader: false,
       errors: {},
       isAlertVisible: false,
@@ -80,10 +80,7 @@ export default {
         let file = this.$refs.file.files[i];
         formData.append("files[" + i + "]", file);
       }
-      formData.append(
-        "residential_gallery_store",
-        this.residential_gallery_store
-      );
+      formData.append("residentials_id", this.residentials_id);
       this.loader = true;
       http
         .post("residential-gallery/store", formData)

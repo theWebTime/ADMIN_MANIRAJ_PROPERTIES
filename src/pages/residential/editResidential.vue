@@ -21,7 +21,7 @@
               <v-file-input
                 accept="image/*"
                 v-model="image"
-                label="Image"
+                label="Residential Image"
                 ref="file"
               ></v-file-input>
             </VCol>

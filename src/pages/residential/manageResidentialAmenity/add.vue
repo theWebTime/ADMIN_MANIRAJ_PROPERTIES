@@ -67,7 +67,7 @@ export default {
       ],
       insertData: {
         amenities_id: "",
-        residential_amenity_store: this.$route.params.id,
+        residential_id: this.$route.params.id,
       },
       data_fetch_property_amenity: "",
       loader: false,

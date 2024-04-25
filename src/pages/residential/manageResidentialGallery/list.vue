@@ -127,8 +127,7 @@ export default {
         required: (value) => !!value || "Required.",
       },
       paramsId: this.$route.params.id,
-      residential_gallery_index: this.$route.params.id,
-      residential_gallery_delete: this.$route.params.id,
+      id: this.$route.params.id,
       editableId: null,
       errors: {},
       isAlertVisible: false,
@@ -147,7 +146,7 @@ export default {
       http
         .post(
           "/residential-gallery/index",
-          { residential_gallery_index: this.residential_gallery_index },
+          { id: this.id },
           +"?page=" +
             this.options.page +
             "&itemsPerPage=" +
@@ -187,7 +186,7 @@ export default {
     deleteData() {
       http
         .post("/residential-gallery/delete", {
-          residential_gallery_delete: this.editableId,
+          gallery_id: this.editableId,
         })
         .then((res) => {
           if (res.data.success) {
