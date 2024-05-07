@@ -17,15 +17,15 @@
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
+              <label>Residential Image</label>
               <v-file-input
                 accept="image/*"
                 v-model="image"
-                label="Residential Image"
                 ref="file"
               ></v-file-input>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
               <VAvatar size="48">
                 <VImg :src="fetch_photo" />
               </VAvatar>
@@ -37,13 +37,7 @@
                 label="Name"
               />
             </VCol>
-            <VCol cols="12" md="4">
-              <v-textarea
-                v-model="insertData.description"
-                label="Description"
-              />
-            </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="3">
               <AppSelect
                 v-model="insertData.type_of_property_id"
                 :items="data_fetch_type_of_property"
@@ -53,14 +47,14 @@
                 label="Type Of Property"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="3">
               <AppTextField
                 :rules="[globalRequire].flat()"
                 v-model="insertData.square_yard"
                 label="Square Yard"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="3">
               <AppSelect
                 v-model="insertData.status_id"
                 :items="data_fetch_property_status"
@@ -70,13 +64,18 @@
                 label="Property Status"
               />
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol cols="12" md="3">
               <AppTextField
                 v-model="insertData.shop_square_feet"
                 label="Shop Square feet"
               />
             </VCol>
-
+            <VCol cols="12" md="4">
+              <v-textarea
+                v-model="insertData.description"
+                label="Description"
+              />
+            </VCol>
             <VCol cols="12" md="4">
               <v-textarea v-model="insertData.iframe" label="IFrame" />
             </VCol>
@@ -93,15 +92,15 @@
                 <VRadio label="In-Active" :value="0" density="compact" />
               </VRadioGroup>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
+              <label>Brochure</label>
               <v-file-input
                 accept="file/*"
                 v-model="brochure"
-                label="File"
                 ref="file1"
               ></v-file-input>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol cols="12" md="4">
               <VAvatar size="48">
                 <VImg :src="fetch_file" />
               </VAvatar>
