@@ -21,10 +21,10 @@
           <br />
           <VRow>
             <VCol cols="12" md="6">
+              <label>About Us Image</label>
               <v-file-input
                 accept="image/*"
                 v-model="image"
-                label="Image"
                 ref="file"
               ></v-file-input>
             </VCol>
