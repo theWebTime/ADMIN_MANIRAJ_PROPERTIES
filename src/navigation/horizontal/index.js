@@ -32,6 +32,13 @@ const manageContactUs = {
 };
 route.push(manageContactUs);
 
+const manageResidentialInquiry = {
+  title: "Residential Inquiry",
+  to: { name: "residentialInquiry" },
+  icon: { icon: "tabler-phone" },
+};
+route.push(manageResidentialInquiry);
+
 const manageAmenity = {
   title: "Amenity",
   to: null,
