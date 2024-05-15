@@ -55,6 +55,20 @@
               />
             </VCol>
             <VCol cols="12" md="3">
+              <AppTextField
+                :rules="[globalRequire].flat()"
+                v-model="insertData.price"
+                label="Price"
+              />
+            </VCol>
+            <VCol cols="12" md="3">
+              <AppTextField
+                :rules="[globalRequire].flat()"
+                v-model="insertData.possession"
+                label="Possession"
+              />
+            </VCol>
+            <VCol cols="12" md="3">
               <AppSelect
                 v-model="insertData.status_id"
                 :items="data_fetch_property_status"
@@ -156,6 +170,8 @@ export default {
         description: "",
         type_of_property_id: "",
         square_yard: "",
+        price: "",
+        possession: "",
         status_id: "",
         shop_square_feet: "",
         iframe: "",
@@ -215,6 +231,8 @@ export default {
             this.insertData.description = resData.description;
             this.insertData.type_of_property_id = resData.type_of_property_id;
             this.insertData.square_yard = resData.square_yard;
+            this.insertData.price = resData.price;
+            this.insertData.possession = resData.possession;
             this.insertData.status_id = resData.status_id;
             this.insertData.shop_square_feet = resData.shop_square_feet;
             this.insertData.iframe = resData.iframe;
