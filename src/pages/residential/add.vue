@@ -31,7 +31,6 @@
                 label="Name"
               />
             </VCol>
-
             <VCol cols="12" md="3">
               <AppSelect
                 v-model="insertData.type_of_property_id"
@@ -39,7 +38,10 @@
                 :rules="[globalRequire].flat()"
                 item-title="no_bhk"
                 item-value="id"
-                label="Type Of Property"
+                label="Type Of Property (you can select multiple
+                options)"
+                multiple
+                chips
               />
             </VCol>
             <VCol cols="12" md="3">
@@ -153,7 +155,8 @@ export default {
       insertData: {
         name: "",
         description: "",
-        type_of_property_id: "",
+        type_of_property_id: [],
+        // top: [],
         square_yard: "",
         price: "",
         possession: "",
