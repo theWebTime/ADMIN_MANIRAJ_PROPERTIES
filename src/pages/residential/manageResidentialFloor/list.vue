@@ -20,17 +20,10 @@
         <VSpacer />
 
         <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-          <!-- 👉 Search  -->
-          <div style="inline-size: 10rem">
-            <AppTextField
-              v-model="options.search"
-              placeholder="Search"
-              density="compact"
-              @keyup="fetchData()"
-            />
-          </div>
-          <router-link to="/residential/add">
-            <VBtn prepend-icon="tabler-plus"> Add Residential</VBtn>
+          <router-link
+            :to="'/residential/manageResidentialFloor/add/' + this.paramsId"
+          >
+            <VBtn prepend-icon="tabler-plus"> Add Residential Floor </VBtn>
           </router-link>
         </div>
       </VCardText>
@@ -40,8 +33,7 @@
           <thead>
             <tr>
               <th class="text-uppercase">ID.</th>
-              <th class="text-uppercase text-center">Name</th>
-              <th class="text-uppercase text-center">Status</th>
+              <th class="text-uppercase text-center">Floor</th>
               <th class="text-uppercase text-center">Action</th>
             </tr>
           </thead>
@@ -52,57 +44,19 @@
                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
               </td>
               <td class="text-center">
-                {{ item.name }}
+                {{ item.floor }}
               </td>
               <td class="text-center">
-                {{ item.status == 1 ? "Active" : "In-Active" }}
-              </td>
-              <td class="text-center">
-                <router-link :to="'/residential/editResidential/' + item.id">
-                  <IconBtn>
-                    <VIcon :icon="'tabler-edit-circle'" />
-
-                    <VTooltip activator="parent" location="start">
-                      Edit Data
-                    </VTooltip>
-                  </IconBtn>
-                </router-link>
-                |
-                <router-link
-                  :to="'/residential/manageResidentialGallery/list/' + item.id"
-                >
-                  <IconBtn>
-                    <VIcon :icon="'tabler-brand-google-photos'" />
-
-                    <VTooltip activator="parent" location="start">
-                      Edit Gallery
-                    </VTooltip>
-                  </IconBtn>
-                </router-link>
-                |
-                <router-link
-                  :to="'/residential/manageResidentialAmenity/list/' + item.id"
-                >
-                  <IconBtn>
-                    <VIcon :icon="'tabler-list'" />
-
-                    <VTooltip activator="parent" location="start">
-                      Edit Amenity
-                    </VTooltip>
-                  </IconBtn>
-                </router-link>
-                |
-                <router-link
-                  :to="'/residential/manageResidentialFloor/list/' + item.id"
-                >
-                  <IconBtn>
-                    <VIcon :icon="'tabler-stairs'" />
-
-                    <VTooltip activator="parent" location="start">
-                      Edit Floors
-                    </VTooltip>
-                  </IconBtn>
-                </router-link>
+                <IconBtn>
+                  <VIcon
+                    class="text-primary"
+                    :icon="'tabler-trash-filled'"
+                    @click="openDeletePopup(item.id)"
+                  />
+                  <VTooltip activator="parent" location="start">
+                    Delete Data
+                  </VTooltip>
+                </IconBtn>
               </td>
             </tr>
           </tbody>
@@ -132,11 +86,11 @@
       <!-- Dialog close btn -->
       <DialogCloseBtn @click="closeDeletePopup()" />
       <!-- Dialog Content -->
-      <!-- <VCard title="Are you Sure to delete?">
-          <VCardText class="d-flex justify-end">
-            <VBtn @click="deleteData()"> Yes </VBtn>
-          </VCardText>
-        </VCard> -->
+      <VCard title="Are you Sure to delete?">
+        <VCardText class="d-flex justify-end">
+          <VBtn @click="deleteData()"> Yes </VBtn>
+        </VCardText>
+      </VCard>
     </VDialog>
   </div>
 </template>
@@ -144,7 +98,7 @@
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
-import http from "../../http-common";
+import http from "../../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -170,6 +124,9 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
       },
+      paramsId: this.$route.params.id,
+      id: this.$route.params.id,
+      amenity_id: this.$route.params.id,
       editableId: null,
       errors: {},
       isAlertVisible: false,
@@ -186,8 +143,10 @@ export default {
     fetchData() {
       this.loader = true;
       http
-        .get(
-          "/residential/index?page=" +
+        .post(
+          "/residential-floor/index",
+          { id: this.id },
+          +"?page=" +
             this.options.page +
             "&itemsPerPage=" +
             this.options.itemsPerPage +
@@ -223,24 +182,26 @@ export default {
       return `Showing ${start} to ${end} of ${total} entries`;
     },
 
-    /* deleteData() {
-        http
-          .post("/event-speaker/delete/" + this.editableId, {})
-          .then((res) => {
-            if (res.data.success) {
-              this.fetchData();
-              this.$toast.success(res.data.message);
-            } else {
-              this.$toast.error(res.data.message);
-            }
-            this.editableId = "";
-            this.isDeleteDialogVisible = false;
-          })
-          .catch((e) => {
-            console.log(e);
-            this.isDeleteDialogVisible = false;
-          });
-      }, */
+    deleteData() {
+      http
+        .post("/residential-floor/delete", {
+          id: this.editableId,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            this.fetchData();
+            this.$toast.success(res.data.message);
+          } else {
+            this.$toast.error(res.data.message);
+          }
+          this.editableId = "";
+          this.isDeleteDialogVisible = false;
+        })
+        .catch((e) => {
+          console.log(e);
+          this.isDeleteDialogVisible = false;
+        });
+    },
   },
 };
 </script>
