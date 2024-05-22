@@ -96,11 +96,7 @@
               />
             </VCol>
             <VCol cols="12" md="6">
-              <v-textarea
-                v-model="insertData.iframe"
-                :rules="[globalRequire].flat()"
-                label="Iframe"
-              />
+              <v-textarea v-model="insertData.iframe" label="Iframe" />
             </VCol>
             <VCol cols="12" md="6">
               <v-textarea v-model="insertData.video_link" label="Video Link" />
@@ -176,17 +172,29 @@ export default {
         .get("/user-side/site-setting-show")
         .then((res) => {
           if (res.data.success) {
-            this.insertData.email1 = res.data.data.email1;
-            this.insertData.email2 = res.data.data.email2;
-            this.insertData.phone_number1 = res.data.data.phone_number1;
-            this.insertData.phone_number2 = res.data.data.phone_number2;
-            this.insertData.address = res.data.data.address;
-            this.insertData.facebook_link = res.data.data.facebook_link;
-            this.insertData.instagram_link = res.data.data.instagram_link;
-            this.insertData.youtube_link = res.data.data.youtube_link;
-            this.insertData.whatsapp_number = res.data.data.whatsapp_number;
-            this.insertData.iframe = res.data.data.iframe;
-            this.insertData.video_link = res.data.data.video_link;
+            this.insertData.email1 = null ? "" : res.data.data.email1;
+            this.insertData.email2 = null ? "" : res.data.data.email2;
+            this.insertData.phone_number1 = null
+              ? ""
+              : res.data.data.phone_number1;
+            this.insertData.phone_number2 = null
+              ? ""
+              : res.data.data.phone_number2;
+            this.insertData.address = null ? "" : res.data.data.address;
+            this.insertData.facebook_link = null
+              ? ""
+              : res.data.data.facebook_link;
+            this.insertData.instagram_link = null
+              ? ""
+              : res.data.data.instagram_link;
+            this.insertData.youtube_link = null
+              ? ""
+              : res.data.data.youtube_link;
+            this.insertData.whatsapp_number = null
+              ? ""
+              : res.data.data.whatsapp_number;
+            this.insertData.iframe = null ? "" : res.data.data.iframe;
+            this.insertData.video_link = null ? "" : res.data.data.video_link;
             this.fetch_photo =
               res.data.data.logo == null ? "" : res.data.data.logo;
           }
